@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>jsonp</title>
+</head>
+<body>
+    <input type="button" value="请求" onclick="getJsonp()">
+    <script>
+        // 请求回调函数
+        function htmlMethod() {
+            console.log(...arguments);
+            console.log('this is in html!');
+        }
+        // 默认请求回调函数
+        function jsonpFun() {
+            console.log('this is jsonpFun!');
+        }
+        // 点击发起 jsonp 请求
+        function getJsonp() {
+            // 请求参数
+            let params = {
+                userId: '001',
+                token: '1qaz2wsx'
+            };
+            // 请求url
+            let url = "http://127.0.0.1:3000/tryjsonp";
+
+            // 获取拼接好的URL
+            let myUrl = geturl(url, params );
+            
+            // 动态创建 script 标签 并 添加到 head 标签中。
+            let myScript = document.createElement('script');
+            myScript.type='text/javascript';
+            myScript.src = myUrl;
+            document.head.appendChild(myScript);
+            // console.log(myScript);
+        }
+        // jsonp URL(url、参数、请求回调) 拼接
+        function geturl(url, params={}, callback='jsonpFun') {
+            let str = "";
+            for (const key in params) {
+                if (params.hasOwnProperty(key)) {
+                    str += `&${key}=${params[key]}`
+                }
+            }
+            return `${url}?callback=${callback}${str}`
+        }
+    </script>
+    <!-- <script src="http://127.0.0.1:3000/tryjsonp?callback=htmlMethod"></script> -->
+</body>
+</html>
